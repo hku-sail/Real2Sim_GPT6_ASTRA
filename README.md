@@ -1,5 +1,7 @@
 # 三视角机器人 RGB 场景重建与动作重放
 
+**中文** | [English](README_EN.md)
+
 ## 仓库内容与数据准备
 
 Git 仓库包含建模、拟合、渲染和验证代码，必要的视觉估计参数、机器人资产许可证，以及可编辑的 `reconstruction/replay.blend`。约 1 GB 的 `real_rgb/`、`sim_rgb/` 逐帧 PNG、视频、日志和验证报告属于本地输入或可再生成结果，因此由 `.gitignore` 排除。
@@ -19,7 +21,7 @@ cp reconstruction/runtime.example.json reconstruction/runtime.json
 
 已知可见差异包括：`hand_right` 抬腕阶段的俯仰、`hand_left` 近处夹爪的投影比例，以及机器人外形细节。白色机械臂的型号无法从这些局部图像确认，隐藏臂段使用几何补全与解析几何 IK。黑笔在夹持阶段保持完整刚性相对姿态，释放后的落笔轨迹为动画插值。详细检查见 `outputs/reconstruction_validation.json`；逐帧对应指相同源帧索引，不代表像素或真实关节级的完全一致。
 
-本次环境修复重新布置了墙体与金属笼架，并移除了遮挡右侧货架的整片木隔板。右侧货架采用独立三维模型，包含绿色圆管框架、4层薄金属板、木色侧背板和38袋商品；透明塑料袋具有鼓胀袋体、封边、标签与内部食品块。货架朝向与位置调整后可在左手视角右侧看到商品。修复后检查了全部593个记录姿态，未检测到环境与桌面、机器人的几何穿插；采用0.2毫米接触容差。结果及货架可见性检查见 [environment_validation.json](outputs/environment_validation.json)。这些检查针对已重建的几何，不替代真实机器人动力学验证。
+本次环境修复重新布置了墙体与金属笼架，并移除了遮挡右侧货架的整片木隔板。右侧货架采用独立三维模型，包含绿色圆管框架、4层薄金属板、木色侧背板和38袋商品；透明塑料袋具有鼓胀袋体、封边、标签与内部食品块。货架朝向与位置调整后可在左手视角右侧看到商品。修复后检查了全部593个记录姿态，未检测到环境与桌面、机器人的几何穿插；采用0.2毫米接触容差。结果及货架可见性检查由流水线生成至 `outputs/environment_validation.json`。这些检查针对已重建的几何，不替代真实机器人动力学验证。
 
 ## 帧与视角
 
@@ -50,7 +52,7 @@ outputs/environment_validation.json
 
 六宫格对比视频 `real_sim_three_views.mp4` 为 1920×960：上排是真实图像，下排是模拟图像，列顺序相同。六路独立视频均保留各自原始分辨率。CSV 列出全部 593 帧的源文件名、Blender 帧号、视频帧号及播放时间。
 
-用浏览器直接打开 [逐帧对比器](outputs/compare.html)，无需联网或安装依赖。拖动滑条、输入 0–592 的帧号、点击前后帧按钮或使用左右方向键，可检查六张原始 PNG 的同帧画面；空格可播放/暂停。页面在六张图像全部加载后一起切换，并预加载相邻帧。请保留工程目录结构，使页面可以读取同级工程下的 `real_rgb` 与 `sim_rgb`。
+运行流水线后，用浏览器直接打开逐帧对比器 `outputs/compare.html`，无需联网或安装依赖。拖动滑条、输入 0–592 的帧号、点击前后帧按钮或使用左右方向键，可检查六张原始 PNG 的同帧画面；空格可播放/暂停。页面在六张图像全部加载后一起切换，并预加载相邻帧。请保留工程目录结构，使页面可以读取同级工程下的 `real_rgb` 与 `sim_rgb`。
 
 `video_validation.json` 记录输入连续性、尺寸、编码帧数、帧率及逐帧显示时间检查，并通过 OpenCV 完整解码复核全部输出。仅打包源视频时，报告为 `outputs/source_video_validation.json`。
 
@@ -87,3 +89,17 @@ python3 scripts/package_videos.py --stage sim
 ```
 
 默认使用 Cycles、64 samples、降噪与持久场景缓存，优先选择 OPTIX GPU；没有支持的 GPU 时回退到 CPU 并打印说明。也可用 `--engine eevee`。渲染脚本读取场景中已保存的相机与动画，不重新拟合相机。`--resume` 验证 PNG 完整性并跳过已有帧；如 `.blend`、引擎或采样设置发生变化，应去掉 `--resume` 重新渲染。重建入口 `scripts/build_replay.py` 使用 `reconstruction` 中保存的观测、标定与运动估计数据；环境、货架和机器人模型分别位于 `scripts/environment_geometry.py`、`scripts/shelf_geometry.py`、`scripts/robot_geometry.py`。
+
+## 引用
+
+如果本项目对你的研究有帮助，请使用以下格式引用：
+
+```bibtex
+@misc{ding2026GPTReal2Sim,
+  title        = {{GPT6\_ASTRA is A Zero-Shot Engine for Real-to-Simulation Generation}},
+  author       = {Ding, Kaixin and You, Linjing and Zhao, Hengshuang},
+  year         = {2026},
+  howpublished = {GitHub},
+  url          = {https://github.com/hku-sail/Real2Sim_GPT6_ASTRA}
+}
+```
