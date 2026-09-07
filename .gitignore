@@ -1,0 +1,21 @@
+# Local tool installations and Python caches
+.tools/
+**/__pycache__/
+*.py[cod]
+.DS_Store
+
+# Source and rendered frame sequences are large local data.
+real_rgb/
+sim_rgb/
+
+# Generated videos, reports, previews, revisions, and logs.
+outputs/
+
+# Machine-specific and reproducible reconstruction artifacts.
+reconstruction/runtime.json
+reconstruction/baked_frame_states.json
+reconstruction/keypoint_overlays/
+reconstruction/*.jpg
+reconstruction/*.png
+reconstruction/*.blend1
+

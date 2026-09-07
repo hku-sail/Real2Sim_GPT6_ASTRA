@@ -1,0 +1,1250 @@
+{
+  "schema_version": 1,
+  "image_dimensions": [
+    640,
+    480
+  ],
+  "coordinate_convention": "[u,v] image pixels, origin top left; pad1/pad2 ordered by image vertical position, NOT persistent mechanical finger identity. Both refer to right gripper, not pen endpoints.",
+  "method": "Manual inspection of original-resolution RGB with 40 px grids; estimated annotation accuracy approximately 10 px where visible. No robot telemetry or calibration used.",
+  "black_shell_definition": "Visible upper cap/lid center near the white DH logo, excluding the rear cylindrical wrist sleeve. Alternate alias black_shell_center_uv uses this same point.",
+  "pen_definition": "Endpoints of currently visible segment only; the true lower tip may be hidden by gripper or cup. Never use these as finger-pad labels.",
+  "wrist_definition": "Approximate center of projected silver-ring ellipse. It can lie close to image boundary; null when invisible.",
+  "occlusion_warning": "For closed jaws, small projected separation is often occluded; use gap midpoint and uncertainty flag.",
+  "frames": [
+    {
+      "frame": 0,
+      "head": {
+        "black_shell_cap_center_uv": [
+          550,
+          365
+        ],
+        "black_shell_center_uv": [
+          550,
+          365
+        ],
+        "finger_pad_centers_uv": [
+          [
+            415,
+            284
+          ],
+          [
+            409,
+            423
+          ]
+        ],
+        "gap_midpoint_uv": [
+          412.0,
+          353.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            526,
+            269
+          ]
+        ],
+        "pen_full_length_visible": true
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            316,
+            119
+          ],
+          [
+            434,
+            171
+          ]
+        ],
+        "gap_midpoint_uv": [
+          375.0,
+          145.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 55,
+      "head": {
+        "black_shell_cap_center_uv": [
+          561,
+          343
+        ],
+        "black_shell_center_uv": [
+          561,
+          343
+        ],
+        "finger_pad_centers_uv": [
+          [
+            438,
+            263
+          ],
+          [
+            425,
+            394
+          ]
+        ],
+        "gap_midpoint_uv": [
+          431.5,
+          328.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            526,
+            269
+          ]
+        ],
+        "pen_full_length_visible": true
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 75,
+      "head": {
+        "black_shell_cap_center_uv": [
+          603,
+          269
+        ],
+        "black_shell_center_uv": [
+          603,
+          269
+        ],
+        "finger_pad_centers_uv": [
+          [
+            506,
+            194
+          ],
+          [
+            480,
+            289
+          ]
+        ],
+        "gap_midpoint_uv": [
+          493.0,
+          241.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            526,
+            269
+          ]
+        ],
+        "pen_full_length_visible": true
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 100,
+      "head": {
+        "black_shell_cap_center_uv": [
+          624,
+          229
+        ],
+        "black_shell_center_uv": [
+          624,
+          229
+        ],
+        "finger_pad_centers_uv": [
+          [
+            542,
+            177
+          ],
+          [
+            508,
+            245
+          ]
+        ],
+        "gap_midpoint_uv": [
+          525.0,
+          211.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            526,
+            269
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 125,
+      "head": {
+        "black_shell_cap_center_uv": [
+          607,
+          230
+        ],
+        "black_shell_center_uv": [
+          607,
+          230
+        ],
+        "finger_pad_centers_uv": [
+          [
+            550,
+            185
+          ],
+          [
+            506,
+            232
+          ]
+        ],
+        "gap_midpoint_uv": [
+          528.0,
+          208.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            501,
+            243
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 150,
+      "head": {
+        "black_shell_cap_center_uv": [
+          576,
+          235
+        ],
+        "black_shell_center_uv": [
+          576,
+          235
+        ],
+        "finger_pad_centers_uv": [
+          [
+            538,
+            198
+          ],
+          [
+            491,
+            240
+          ]
+        ],
+        "gap_midpoint_uv": [
+          514.5,
+          219.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            493,
+            230
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 175,
+      "head": {
+        "black_shell_cap_center_uv": [
+          548,
+          242
+        ],
+        "black_shell_center_uv": [
+          548,
+          242
+        ],
+        "finger_pad_centers_uv": [
+          [
+            529,
+            211
+          ],
+          [
+            484,
+            246
+          ]
+        ],
+        "gap_midpoint_uv": [
+          506.5,
+          228.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            495,
+            233
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 200,
+      "head": {
+        "black_shell_cap_center_uv": [
+          549,
+          238
+        ],
+        "black_shell_center_uv": [
+          549,
+          238
+        ],
+        "finger_pad_centers_uv": [
+          [
+            526,
+            210
+          ],
+          [
+            484,
+            238
+          ]
+        ],
+        "gap_midpoint_uv": [
+          505.0,
+          224.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            496,
+            232
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            201,
+            140
+          ],
+          [
+            204,
+            177
+          ]
+        ],
+        "gap_midpoint_uv": [
+          202.5,
+          158.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 225,
+      "head": {
+        "black_shell_cap_center_uv": [
+          545,
+          235
+        ],
+        "black_shell_center_uv": [
+          545,
+          235
+        ],
+        "finger_pad_centers_uv": [
+          [
+            507,
+            210
+          ],
+          [
+            475,
+            228
+          ]
+        ],
+        "gap_midpoint_uv": [
+          491.0,
+          219.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          635,
+          279
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            474,
+            205
+          ],
+          [
+            490,
+            225
+          ]
+        ],
+        "pen_full_length_visible": false,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 250,
+      "head": {
+        "black_shell_cap_center_uv": [
+          541,
+          239
+        ],
+        "black_shell_center_uv": [
+          541,
+          239
+        ],
+        "finger_pad_centers_uv": [
+          [
+            488,
+            216
+          ],
+          [
+            479,
+            225
+          ]
+        ],
+        "gap_midpoint_uv": [
+          483.5,
+          220.5
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          638,
+          281
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            468,
+            208
+          ],
+          [
+            473,
+            215
+          ]
+        ],
+        "pen_full_length_visible": false,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            186,
+            161
+          ],
+          [
+            189,
+            170
+          ]
+        ],
+        "gap_midpoint_uv": [
+          187.5,
+          165.5
+        ],
+        "finger_pad_centers_estimated": true,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 275,
+      "head": {
+        "black_shell_cap_center_uv": [
+          544,
+          220
+        ],
+        "black_shell_center_uv": [
+          544,
+          220
+        ],
+        "finger_pad_centers_uv": [
+          [
+            480,
+            188
+          ],
+          [
+            469,
+            195
+          ]
+        ],
+        "gap_midpoint_uv": [
+          474.5,
+          191.5
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            460,
+            175
+          ],
+          [
+            514,
+            249
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 300,
+      "head": {
+        "black_shell_cap_center_uv": [
+          535,
+          204
+        ],
+        "black_shell_center_uv": [
+          535,
+          204
+        ],
+        "finger_pad_centers_uv": [
+          [
+            454,
+            165
+          ],
+          [
+            444,
+            173
+          ]
+        ],
+        "gap_midpoint_uv": [
+          449.0,
+          169.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            430,
+            145
+          ],
+          [
+            497,
+            235
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 325,
+      "head": {
+        "black_shell_cap_center_uv": [
+          483,
+          196
+        ],
+        "black_shell_center_uv": [
+          483,
+          196
+        ],
+        "finger_pad_centers_uv": [
+          [
+            403,
+            148
+          ],
+          [
+            390,
+            156
+          ]
+        ],
+        "gap_midpoint_uv": [
+          396.5,
+          152.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          600,
+          276
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            384,
+            128
+          ],
+          [
+            438,
+            230
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 350,
+      "head": {
+        "black_shell_cap_center_uv": [
+          421,
+          199
+        ],
+        "black_shell_center_uv": [
+          421,
+          199
+        ],
+        "finger_pad_centers_uv": [
+          [
+            343,
+            153
+          ],
+          [
+            338,
+            162
+          ]
+        ],
+        "gap_midpoint_uv": [
+          340.5,
+          157.5
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          529,
+          281
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            333,
+            129
+          ],
+          [
+            385,
+            232
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            57,
+            87
+          ],
+          [
+            62,
+            99
+          ]
+        ],
+        "gap_midpoint_uv": [
+          59.5,
+          93.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 375,
+      "head": {
+        "black_shell_cap_center_uv": [
+          417,
+          211
+        ],
+        "black_shell_center_uv": [
+          417,
+          211
+        ],
+        "finger_pad_centers_uv": [
+          [
+            342,
+            158
+          ],
+          [
+            337,
+            168
+          ]
+        ],
+        "gap_midpoint_uv": [
+          339.5,
+          163.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          511,
+          296
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            333,
+            130
+          ],
+          [
+            380,
+            243
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 400,
+      "head": {
+        "black_shell_cap_center_uv": [
+          407,
+          229
+        ],
+        "black_shell_center_uv": [
+          407,
+          229
+        ],
+        "finger_pad_centers_uv": [
+          [
+            339,
+            180
+          ],
+          [
+            330,
+            185
+          ]
+        ],
+        "gap_midpoint_uv": [
+          334.5,
+          182.5
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          503,
+          316
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            333,
+            155
+          ],
+          [
+            359,
+            264
+          ]
+        ],
+        "pen_full_length_visible": true,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            57,
+            148
+          ],
+          [
+            60,
+            162
+          ]
+        ],
+        "gap_midpoint_uv": [
+          58.5,
+          155.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 425,
+      "head": {
+        "black_shell_cap_center_uv": [
+          405,
+          239
+        ],
+        "black_shell_center_uv": [
+          405,
+          239
+        ],
+        "finger_pad_centers_uv": [
+          [
+            334,
+            192
+          ],
+          [
+            325,
+            198
+          ]
+        ],
+        "gap_midpoint_uv": [
+          329.5,
+          195.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          498,
+          330
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            332,
+            166
+          ],
+          [
+            357,
+            266
+          ]
+        ],
+        "pen_full_length_visible": false,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 450,
+      "head": {
+        "black_shell_cap_center_uv": [
+          407,
+          244
+        ],
+        "black_shell_center_uv": [
+          407,
+          244
+        ],
+        "finger_pad_centers_uv": [
+          [
+            336,
+            199
+          ],
+          [
+            328,
+            207
+          ]
+        ],
+        "gap_midpoint_uv": [
+          332.0,
+          203.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "wrist_silver_ring_center_uv": [
+          495,
+          331
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            332,
+            174
+          ],
+          [
+            357,
+            268
+          ]
+        ],
+        "pen_full_length_visible": false,
+        "occlusion_note": "Closing or closed jaws overlap in the head view. Pad-center positions are manually estimated from visible pad edges and linkage geometry; do not treat these as high-precision labels."
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            61,
+            180
+          ],
+          [
+            69,
+            194
+          ]
+        ],
+        "gap_midpoint_uv": [
+          65.0,
+          187.0
+        ],
+        "finger_pad_centers_estimated": true,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 475,
+      "head": {
+        "black_shell_cap_center_uv": [
+          411,
+          229
+        ],
+        "black_shell_center_uv": [
+          411,
+          229
+        ],
+        "finger_pad_centers_uv": [
+          [
+            361,
+            173
+          ],
+          [
+            335,
+            205
+          ]
+        ],
+        "gap_midpoint_uv": [
+          348.0,
+          189.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": [
+          514,
+          322
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            334,
+            196
+          ],
+          [
+            357,
+            270
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 490,
+      "head": {
+        "black_shell_cap_center_uv": [
+          418,
+          213
+        ],
+        "black_shell_center_uv": [
+          418,
+          213
+        ],
+        "finger_pad_centers_uv": [
+          [
+            375,
+            150
+          ],
+          [
+            334,
+            210
+          ]
+        ],
+        "gap_midpoint_uv": [
+          354.5,
+          180.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": [
+          524,
+          306
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            199
+          ],
+          [
+            359,
+            272
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 500,
+      "head": {
+        "black_shell_cap_center_uv": [
+          422,
+          210
+        ],
+        "black_shell_center_uv": [
+          422,
+          210
+        ],
+        "finger_pad_centers_uv": [
+          [
+            369,
+            143
+          ],
+          [
+            333,
+            212
+          ]
+        ],
+        "gap_midpoint_uv": [
+          351.0,
+          177.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": [
+          530,
+          300
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            196
+          ],
+          [
+            362,
+            271
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            95,
+            69
+          ],
+          [
+            150,
+            144
+          ]
+        ],
+        "gap_midpoint_uv": [
+          122.5,
+          106.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    },
+    {
+      "frame": 510,
+      "head": {
+        "black_shell_cap_center_uv": [
+          427,
+          211
+        ],
+        "black_shell_center_uv": [
+          427,
+          211
+        ],
+        "finger_pad_centers_uv": [
+          [
+            380,
+            148
+          ],
+          [
+            337,
+            216
+          ]
+        ],
+        "gap_midpoint_uv": [
+          358.5,
+          182.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": [
+          548,
+          300
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            196
+          ],
+          [
+            364,
+            271
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 535,
+      "head": {
+        "black_shell_cap_center_uv": [
+          478,
+          224
+        ],
+        "black_shell_center_uv": [
+          478,
+          224
+        ],
+        "finger_pad_centers_uv": [
+          [
+            407,
+            155
+          ],
+          [
+            374,
+            242
+          ]
+        ],
+        "gap_midpoint_uv": [
+          390.5,
+          198.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": [
+          621,
+          316
+        ],
+        "wrist_center_estimated": true,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            196
+          ],
+          [
+            368,
+            272
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 560,
+      "head": {
+        "black_shell_cap_center_uv": [
+          512,
+          260
+        ],
+        "black_shell_center_uv": [
+          512,
+          260
+        ],
+        "finger_pad_centers_uv": [
+          [
+            418,
+            190
+          ],
+          [
+            395,
+            295
+          ]
+        ],
+        "gap_midpoint_uv": [
+          406.5,
+          242.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            196
+          ],
+          [
+            368,
+            272
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": null
+    },
+    {
+      "frame": 592,
+      "head": {
+        "black_shell_cap_center_uv": [
+          555,
+          367
+        ],
+        "black_shell_center_uv": [
+          555,
+          367
+        ],
+        "finger_pad_centers_uv": [
+          [
+            417,
+            291
+          ],
+          [
+            406,
+            438
+          ]
+        ],
+        "gap_midpoint_uv": [
+          411.5,
+          364.5
+        ],
+        "finger_pad_centers_estimated": false,
+        "wrist_silver_ring_center_uv": null,
+        "wrist_center_estimated": false,
+        "pen_visible_segment_endpoints_uv": [
+          [
+            344,
+            196
+          ],
+          [
+            368,
+            272
+          ]
+        ],
+        "pen_full_length_visible": false
+      },
+      "hand_left": {
+        "finger_pad_centers_uv": [
+          [
+            323,
+            120
+          ],
+          [
+            448,
+            172
+          ]
+        ],
+        "gap_midpoint_uv": [
+          385.5,
+          146.0
+        ],
+        "finger_pad_centers_estimated": false,
+        "note": "Right gripper only; foreground left gripper excluded."
+      }
+    }
+  ]
+}

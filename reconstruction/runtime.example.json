@@ -1,0 +1,5 @@
+{
+  "blender": "/path/to/blender",
+  "ffmpeg": "/path/to/ffmpeg",
+  "ffprobe": "/path/to/ffprobe"
+}

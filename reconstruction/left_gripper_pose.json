@@ -1,0 +1,246 @@
+{
+  "method": "Multiview nonlinear least squares, fixed estimated RGB cameras and fixed scale.",
+  "location": [
+    -0.20384030306593942,
+    -0.25847704361863544,
+    0.3072873437709585
+  ],
+  "quaternion_wxyz": [
+    0.7282639789819105,
+    -0.038659550966043336,
+    0.3548239997070898,
+    -0.5850102095420237
+  ],
+  "scale": 0.72,
+  "gap": 0.13131800335709537,
+  "gap_m_unscaled": 0.13131800335709537,
+  "fit_priority": "Head landmarks and self-camera clearance; hand_left pad residual is diagnostic and low-weight due to inconsistent estimated camera geometry.",
+  "gap_m_world": 0.09454896241710867,
+  "local_positive_y_world": [
+    0.8246490528909276,
+    0.3125369877014029,
+    -0.4714600416627364
+  ],
+  "local_positive_z_world": [
+    0.5620435397528141,
+    -0.35884260801399764,
+    0.745210736701934
+  ],
+  "local_landmarks": {
+    "shell_top_cap": [
+      0,
+      -0.055,
+      0.05
+    ],
+    "pad_centers": [
+      [
+        -0.07515900167854768,
+        0.103,
+        0.0
+      ],
+      [
+        0.07515900167854768,
+        0.103,
+        0.0
+      ]
+    ]
+  },
+  "world_landmarks": [
+    [
+      -0.21626283812931885,
+      -0.2837718422201149,
+      0.3527847479420725
+    ],
+    [
+      -0.14613282699742658,
+      -0.18770461874119748,
+      0.2978430990028263
+    ],
+    [
+      -0.1392358316096699,
+      -0.2828939824802013,
+      0.24680463515967366
+    ]
+  ],
+  "head_correspondence_indices": [
+    1,
+    2
+  ],
+  "hand_left_correspondence_indices": [
+    0,
+    1
+  ],
+  "reprojection": {
+    "head": {
+      "observations_uv": [
+        [
+          105.0,
+          365.0
+        ],
+        [
+          226.0,
+          296.0
+        ],
+        [
+          230.0,
+          420.0
+        ]
+      ],
+      "reprojections_uv": [
+        [
+          104.91850400475997,
+          364.88174673938545
+        ],
+        [
+          226.03615072163592,
+          294.6335193118435
+        ],
+        [
+          230.52449966932008,
+          421.55071202642245
+        ]
+      ],
+      "residuals_uv_px": [
+        [
+          -0.08149599524003293,
+          -0.11825326061455144
+        ],
+        [
+          0.036150721635920036,
+          -1.3664806881565141
+        ],
+        [
+          0.524499669320079,
+          1.5507120264224454
+        ]
+      ],
+      "rms_coordinate_px": 0.8726405778510908,
+      "per_landmark_error_px": [
+        0.14361556630858818,
+        1.3669587944702277,
+        1.637011817919492
+      ],
+      "minimum_camera_depth_m": 0.42726921928990635
+    },
+    "hand_left": {
+      "observations_uv": [
+        [
+          214.0,
+          316.0
+        ],
+        [
+          462.0,
+          314.0
+        ]
+      ],
+      "reprojections_uv": [
+        [
+          108.1445708926338,
+          339.38631448567577
+        ],
+        [
+          239.54982205107092,
+          424.96083991545
+        ]
+      ],
+      "residuals_uv_px": [
+        [
+          -105.8554291073662,
+          23.38631448567577
+        ],
+        [
+          -222.45017794892908,
+          110.96083991544998
+        ]
+      ],
+      "rms_coordinate_px": 135.5993005521967,
+      "per_landmark_error_px": [
+        108.40798668330466,
+        248.58879633694744
+      ],
+      "minimum_camera_depth_m": 0.267207903426487
+    }
+  },
+  "self_camera_clearance": {
+    "gap_depth_m": 0.2753539479846628,
+    "gap_midpoint_uv": [
+      175.79093659061496,
+      383.43939144128433
+    ],
+    "sample_labels": [
+      "shell_cap",
+      "nominal_camera_center",
+      "nominal_camera_corner_0",
+      "nominal_camera_corner_1",
+      "nominal_camera_corner_2",
+      "nominal_camera_corner_3"
+    ],
+    "sample_uv": [
+      [
+        80.93728601897072,
+        547.7422861978935
+      ],
+      [
+        65.27192207921942,
+        597.8783877066141
+      ],
+      [
+        74.50540010228312,
+        495.85921184259814
+      ],
+      [
+        168.65885761145543,
+        549.9358760951604
+      ],
+      [
+        5.807207096790781,
+        593.2658780877324
+      ],
+      [
+        123.04562663764015,
+        653.8846436543778
+      ]
+    ],
+    "sample_depth_m": [
+      0.15841353741811992,
+      0.12075557151993035,
+      0.11787670386309612,
+      0.1228623747914932,
+      0.09660580407402568,
+      0.10159147500242283
+    ],
+    "cap_below_frame": true,
+    "nominal_housing_samples_below_frame": true,
+    "gap_depth_exceeds_0_12_m": true,
+    "render_validation": "outputs/preview/left_pose_candidate_hand_left.png rendered from existing blend with only left root changed; no foreground body/camera enclosure occlusion."
+  },
+  "housing_visual_override": {
+    "local_position": [
+      -0.0847440007648856,
+      -0.13322445330420712,
+      0.10607970345930325
+    ],
+    "local_quaternion_wxyz": [
+      0.9165688765747725,
+      -0.22886676729870778,
+      -0.3279046195933425,
+      -0.00024035399741748065
+    ],
+    "dimensions_unscaled": [
+      0.046,
+      0.033,
+      0.073
+    ],
+    "observed_head_center_uv": [
+      30.0,
+      270.0
+    ],
+    "world_position": [
+      -0.2439028315596956,
+      -0.26219914042806564,
+      0.438201486691341
+    ],
+    "note": "Geometry-only optional override. Optical camera extrinsics stay fixed. Depth chosen nearest the nominal gripper-mounted housing, not at the inconsistent estimated self-camera position."
+  },
+  "limitations": "The two cameras were estimated from assumed RGB geometry. Pad labeling is approximately 5-10 px; residual cannot prove metric accuracy. Housing translation has an unobservable single-view depth ambiguity."
+}

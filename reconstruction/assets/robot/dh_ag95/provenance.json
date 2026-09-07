@@ -1,0 +1,27 @@
+{
+  "source": "https://github.com/ian-chuang/dh_ag95_gripper_ros2",
+  "upstream": "https://github.com/DH-Robotics/dh_gripper_ros",
+  "commit": "fc4f80fdfb3acae5626df4359aec1401cb71a9a3",
+  "branch": "humble",
+  "description_license": "Apache-2.0",
+  "repository_license": "MIT",
+  "copied_files": {
+    "LICENSE-repository-MIT.txt": "46d1c6b4e7f2380462edd9724a29f4ac2b6d645e5aa30e5a367f803704ffe613",
+    "LICENSE-description-Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "urdf/dh_ag95_macro.xacro": "d5ca3aff99d6ef4a7c64a9dd1db0d53018f3553042e86994a586d17e345123de",
+    "urdf/dh_ag95.urdf.xacro": "d09dcc0471585cbb739fe6942687e576917b85def19abd25a44fbcdcc67c73a4",
+    "meshes/visual/inner_knuckle.stl": "d6f1cabdda16b71f78d8779233ab4511def1fe6361eedc93928f9712dc6a2f3f",
+    "meshes/visual/base_link.stl": "92f0fd7e62cd1f6fc8fc0eaf0efff49ba32d261d28aa88c9687d1abeebe51ac5",
+    "meshes/visual/gripper_body.stl": "63555d0f0cce8e4d7addaa7910b74ac5c4bbb7c59419821dcf1180ea1f624464",
+    "meshes/visual/finger.stl": "be0737719f5b31901ac68e4fed086467398d3052ec60fb4ee9a341fe9fce38a4",
+    "meshes/visual/outer_knuckle.stl": "c136958ef72eef893260065a3668d7ac79fe80e20eca22f8d311df295a706f47",
+    "meshes/visual/finger_pad.stl": "44e4a98065782da69980cd30ef630d47ef4fc6364d5f026b7b5c02d8e4479825",
+    "meshes/collision/inner_knuckle.stl": "e6280d54e82ddfb7e3281e2f79f707d9e4007f77b4ee8e069fe1fdc244758415",
+    "meshes/collision/base_link.stl": "e6134af47b04e292e2c9cd56462d93c861aefe575a4366738238d141fbea22a9",
+    "meshes/collision/gripper_body.stl": "969e7000c47fbc54379f70a2819d79c79e8e72ac28ae6c004fabd82f0106f79c",
+    "meshes/collision/finger.stl": "7d4c275479a3c39d5884b78c383855d1db92d381a4a06a0f50706500f1855be4",
+    "meshes/collision/outer_knuckle.stl": "618ae262515dc2b1114b4783542c3feae412fb3e7f6e46431eee61ce60424a12",
+    "meshes/collision/finger_pad.stl": "3ed3044bdab33c99557c25335dfad88513c10bb0a7639087e4096ea9b0c8670a"
+  },
+  "identification": "Visible grippers match DH AG-series geometry; exact hardware variant unverified. White robot arm model not identified from RGB."
+}
