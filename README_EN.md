@@ -2,6 +2,8 @@
 
 [中文](README.md) | **English**
 
+[Detailed work log and Efficient ASTRA 3D reconstruction pipeline (Chinese)](docs/efficient_astra_3d_pipeline_zh-CN.md)
+
 ## Repository Contents and Data Preparation
 
 The Git repository contains the modeling, fitting, rendering, and validation code; the required visual-estimation parameters; robot-asset licenses; and the editable `reconstruction/replay.blend` scene. Approximately 1 GB of frame-by-frame PNG images under `real_rgb/` and `sim_rgb/`, along with videos, logs, and validation reports, are local inputs or reproducible outputs and are therefore excluded by `.gitignore`.

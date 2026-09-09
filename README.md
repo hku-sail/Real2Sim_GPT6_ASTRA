@@ -2,6 +2,8 @@
 
 **中文** | [English](README_EN.md)
 
+[详细执行记录与 Efficient ASTRA 3D 重建流水线](docs/efficient_astra_3d_pipeline_zh-CN.md)
+
 ## 仓库内容与数据准备
 
 Git 仓库包含建模、拟合、渲染和验证代码，必要的视觉估计参数、机器人资产许可证，以及可编辑的 `reconstruction/replay.blend`。约 1 GB 的 `real_rgb/`、`sim_rgb/` 逐帧 PNG、视频、日志和验证报告属于本地输入或可再生成结果，因此由 `.gitignore` 排除。
