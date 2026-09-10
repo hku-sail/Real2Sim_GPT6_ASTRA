@@ -1,10 +1,12 @@
-# Efficient ASTRA：三视角机器人 Real-to-Sim 3D 重建记录与高效流水线
+# Efficient ASTRA：机器人案例复盘与通用视频到 Blender 重建流水线
 
-本文记录 GPT6-ASTRA 在收到以下请求后完成的工作，并基于这次执行设计一套更高效、可复用的 ASTRA 3D 重建流水线。
+本文首先记录 GPT6-ASTRA 在一个三视角机器人案例中完成的工作，再基于这次执行设计一套面向任意视频内容、可复用的 ASTRA 3D 重建流水线。
 
 > 请查看 `real_rgb` 的真机机器人操作视频（已转化为帧），利用 Blender 进行场景建模和动作重放，最后输出 `real_rgb` 和 `sim_rgb` 视频；三个视角都要有，且能逐帧对应。
 
 文中时间为 Asia/Shanghai，主要来自文件完成时间、渲染日志、验证 JSON 和 Git 提交记录。输入 PNG 在请求开始时已经存在，不是 GPT6-ASTRA 生成的。
+
+第 1—15 节是上述机器人任务的具体执行记录，因此会出现夹爪、笔、货架和三视角等案例字段。第 16 节是独立的通用方案：输入可以是一个或多个视频，主体可以是人、动物、车辆、机器人、刚体、关节物体、可变形物体或混合场景，相机也可以固定或移动。
 
 ## 1. 执行结果
 
@@ -712,39 +714,61 @@ routing:
 
 GPT6 的价值集中在少数会改变全局重建结果的决策点；一旦假设被确定，后续建模、拟合、渲染和验证都应固化为脚本。这能减少昂贵模型调用，也能避免在环境和动作尚未冻结时重复全量渲染。
 
-## 16. 另一种高效通用方案：Prompt1 → 结果1 → GPT6 → 结果2 → 结果3
+## 16. 通用视频到 Blender 方案：直接 GPT6 基线与三级级联
 
-对于能够直接接收视频的中低多模态模型，可以把前面的细粒度流水线封装成三级模型级联：
+本节不预设输入是机器人视频，也不预设三视角、固定相机或抓放任务。输入可以是一个或多个描述同一时空事件的视频；内容可以包括人、动物、车辆、机器人、刚体、关节物体、可变形物体和混合场景；镜头可以固定、移动、变焦、切换或存在遮挡。最终需要重建哪些实体、输出哪些视角，也由视频证据和用户任务共同决定。
+
+“逐帧一致”在这套通用流程中包含两层要求：
+
+1. **时间与索引一致**：源视频帧、Blender 时间轴帧和输出视频帧之间有明确、可逆、经过验证的映射。
+2. **可见内容一致**：在指定输出相机中，场景布局、相机运动、实体外观、姿态、形变、交互、遮挡和状态变化尽可能匹配对应源帧，并由预先声明的指标与人工复核共同验收。
+
+只靠单目 RGB 视频时，绝对尺度、被遮挡结构、材质参数和真实三维运动可能没有唯一解。因此，“一致”必须由可测的二维重投影、轮廓重合、光流、感知相似度、关键事件帧和逐帧映射来定义，不能无条件解释为像素完全相同或真实物理状态唯一恢复。
+
+### 16.1 直接 GPT6 基线与公平对比
+
+直接方案把原始视频和下面这一条 Prompt 一起交给 GPT6：
 
 ```text
-Prompt1 + 原始视频
-        ↓
-中低多模态模型
-        ↓
-结果1：结构化观察包
-
-Prompt2 + 结果1
-        ↓
-GPT6
-        ↓
-结果2：自包含、已裁决的执行规格
-
-Prompt3 + 结果2
-        ↓
-中低代码模型或执行代理
-        ↓
-结果3：最终 Blender 工程、sim_rgb、视频和验证报告
+请根据输入的视频，利用blender重建场景和动作，生成的blender动画要求和输入视频逐帧一致
 ```
 
-第三阶段的模型输入是 **结果2 + Prompt3**，不再输入结果1。为使这条数据流成立，结果2必须是结果1经过 GPT6 校验、纠错、补全和压缩后的自包含超集；结果2不能要求第三阶段“回看结果1再决定”。
+其数据流为：
 
-原始视频仍应存在于执行环境中，供结果3阶段生成的脚本读取。这里“不输入结果1”指中低模型的上下文只包含结果2，不表示 Blender/FFmpeg 执行器不能读取结果2中声明的原始文件路径。
+```text
+原始视频 + 上述 Prompt → GPT6 → Blender 场景、动画、渲染结果与验证材料
+```
 
-### 16.1 三级级联图
+三级级联方案的数据流为：
+
+```text
+Prompt1 + 原始视频 → 中低多模态模型 → 结果1
+Prompt2 + 结果1 → GPT6 → 结果2
+Prompt3 + 结果2 → 中低代码模型或执行代理 → 结果3
+```
+
+第三阶段接收的是 **结果2 + Prompt3**，不是结果1。结果2必须包含第三阶段所需的全部事实、裁决、文件引用、参数、约束和验收规则。
+
+为了公平比较，两种方案必须使用同一批原始视频、相同 Blender/渲染工具、相同算力预算，并交付相同类型的 `.blend`、逐帧渲染、视频、帧映射和验证报告。比较时应记录总模型成本、GPT6 输入 token/视频时长、人工干预次数、首次验收通过率、重跑耗时和最终误差。
+
+| 维度 | 直接 GPT6 基线 | 三级级联 |
+|---|---|---|
+| GPT6 输入 | 原始视频和一条开放式任务 Prompt | 中低模型生成的结构化结果1与 Prompt2 |
+| GPT6 工作 | 视频理解、假设裁决、方案设计、代码与执行编排集中完成 | 重点审计证据、解决歧义并编译执行规格 |
+| 中间契约 | 由 GPT6 临场建立 | 结果1、结果2有固定 schema |
+| 调试方式 | 需要从完整上下文定位错误 | 可以定位到观察、裁决或执行阶段 |
+| 缓存与复用 | 视频或任务变化时常需重新处理长上下文 | 视频观察包、执行规格和渲染阶段可分别缓存 |
+| 可重复性 | 依赖单次端到端输出是否完整 | 版本化 Prompt、schema、哈希和质量门更易复现 |
+| 主要优势 | 接口最短，适合小规模试验、短视频和快速建立上限 | 降低 GPT6 的长视频处理量，适合批量任务和持续迭代 |
+| 主要风险 | 简短 Prompt 没有明确输出 schema、误差指标和失败策略 | 结果1遗漏事实时会污染后续阶段，需要证据覆盖率检查 |
+
+直接 GPT6 基线应始终保留。它既是最简单的用户入口，也是评价三级级联是否真正降低成本、提高稳定性的参照组。
+
+### 16.2 三级级联图
 
 ```mermaid
 flowchart LR
-    A[原始三视角视频] --> B[Prompt1]
+    A[一个或多个原始视频] --> B[Prompt1]
     B --> C[中低多模态模型]
     C --> D[结果1<br/>结构化观察包]
     D --> E[Prompt2]
@@ -753,80 +777,84 @@ flowchart LR
     G --> H[Prompt3]
     H --> I[中低代码模型/执行代理]
     I --> J[确定性脚本<br/>Blender、FFmpeg、验证器]
-    J --> K[结果3<br/>最终交付]
+    J --> K[结果3<br/>工程、逐帧渲染、视频、报告]
     J -->|质量门失败| L[结构化失败报告]
     L -->|仅异常路径| F
 ```
 
-### 16.2 三个阶段的职责边界
+原始视频仍保存在执行环境中，供阶段3生成的脚本按结果2里的路径和哈希读取。“第三阶段不输入结果1”只限制模型上下文，不限制 Blender、FFmpeg 或验证脚本读取结果2明确声明的源媒体。
 
-| 阶段 | 模型 | 主要任务 | 禁止做的事 |
+### 16.3 三个阶段的职责边界
+
+| 阶段 | 模型 | 主要任务 | 边界 |
 |---|---|---|---|
-| 阶段1 | 中低多模态模型 | 看原始视频、抽取事实、关键帧、物体、动作、相机候选和不确定性 | 不擅自确定不可见结构，不把猜测写成真实标定，不直接启动全量渲染 |
-| 阶段2 | GPT6 | 审计结果1、解决跨视角矛盾、选择重建假设、形成完整执行规格 | 不承担逐帧编码、批量渲染和可脚本化的机械工作 |
-| 阶段3 | 中低代码模型/执行代理 | 严格执行结果2、生成代码、调用 Blender/FFmpeg、运行质量门并打包 | 不重新解释场景语义，不默默修改 GPT6 已冻结的事件和坐标约束 |
+| 阶段1 | 中低多模态模型 | 读取视频，提取镜头、实体、运动、形变、交互、关键帧和不确定性 | 不把不可见结构或未知标定写成事实，不启动全量渲染 |
+| 阶段2 | GPT6 | 审计结果1，解决身份、时空、几何和运动歧义，形成完整执行规格 | 不承担批量编码、渲染等确定性机械工作 |
+| 阶段3 | 中低代码模型/执行代理 | 严格执行结果2，生成脚本，调用 Blender/FFmpeg，运行质量门并打包 | 不默默修改 GPT6 冻结的语义、坐标、时间或验收约束 |
 
-### 16.3 Prompt1：让中低模型产出结果1
+### 16.4 Prompt1：用中低模型生成通用结果1
 
-Prompt1 的目标是提取事实和候选假设，而不是直接完成 3D 重建。应事先固定结果1的字段，避免中低模型只返回散文描述。
-
-推荐 Prompt1 模板：
+Prompt1 负责提取证据和候选假设，不直接承诺完成重建。建议使用下面的通用模板：
 
 ```text
-你是多视角机器人视频观察与结构化标注模型。
+你是视频场景、相机和运动的结构化分析模型。
 
-输入：同一条操作轨迹的 head、hand_left、hand_right 三路原始视频。
-任务：提取后续 Blender 重建所需的可观察事实和候选几何关系。
+输入：一个或多个描述同一时空事件的原始视频。内容可能是人、动物、车辆、
+机器人、刚体、关节物体、可变形物体或混合场景；相机可能固定或移动。
+任务：提取 Blender 场景与逐帧动画重建所需的可观察证据、候选关系和不确定性。
 
 要求：
-1. 分别报告每路视频的帧数、分辨率、可见相机运动和可能的同步问题。
-2. 建立统一动作阶段：静止、接近、闭爪、抬起、运输、放置/插入、释放、撤离。
-3. 输出桌面、机器人、夹爪、目标物体、容器、墙体、货架和其他主要环境物体。
-4. 为每个关键阶段选择三个视角的代表帧。
-5. 输出关键点、可见性、遮挡和置信度；无法确定时必须标 unknown。
-6. 区分直接观察、跨视角推断和纯假设。
-7. 不虚构相机标定、深度、关节角、尺寸或物理参数。
-8. 严格按 result1.schema.json 的结构输出，不省略必填字段。
+1. 对每个视频报告文件标识、帧数、分辨率、帧率/时间戳、镜头切换、损坏帧和同步关系。
+2. 分析相机是固定、移动、变焦还是切镜，并给出内参、外参和畸变的候选或 unknown。
+3. 建立场景清单，区分静态环境、动态刚体、关节主体、可变形主体、光源和背景。
+4. 为每个实体建立跨帧轨迹、身份关联、可见性、遮挡、2D 框、掩码和关键点。
+5. 按显著的场景、镜头或运动变化划分时间段，记录出现、消失、接触、分离、形变和状态变化。
+6. 为每个关键变化选取代表帧；多视频只有在有证据时才建立跨视角或跨镜头对应。
+7. 每条结论区分 observed、inferred、assumed，并附来源、帧范围和置信度。
+8. 不虚构标定、深度、尺度、隐藏几何、骨骼、材质、动力学或同步关系。
+9. 严格按 result1.schema.json 输出；未知值写 null 或 unknown，不用散文替代必填字段。
 
 最终只输出结果1，不生成 Blender 场景，不执行全量渲染。
 ```
 
-### 16.4 结果1：结构化观察包
+### 16.5 结果1：通用结构化观察包
 
-建议结果1使用一个 JSON 主文件，必要时附关键帧联系表：
+建议结果1采用一个 JSON 主文件，并附证据索引和必要的关键帧图：
 
 ```text
 result1/
 ├── result1.json
-├── keyframe_contact_sheet.jpg
+├── keyframe_contact_sheets/
 └── evidence_manifest.csv
 ```
 
-`result1.json` 至少包含：
+`result1.json` 的最小通用结构如下：
 
 ```json
 {
-  "schema_version": "astra.result1.v1",
+  "schema_version": "astra.result1.v2",
   "task": {
-    "instruction": "Put the pen from the table into the pen holder",
-    "success_condition": "pen released and stable inside holder"
+    "instruction": "<user reconstruction instruction>",
+    "success_condition": "<user-defined visual and delivery criteria>"
   },
   "inputs": {
-    "views": ["head", "hand_left", "hand_right"],
-    "video_files": {},
+    "videos": [],
     "file_hashes": {},
-    "reported_frame_counts": {},
-    "decoded_frame_counts": {},
-    "fps": null,
+    "decoded_metadata": {},
+    "synchronization_hypotheses": [],
     "timing_confidence": "unknown"
   },
+  "shots_and_views": [],
+  "camera_observations": [],
   "scene_inventory": [],
-  "camera_observations": {},
-  "action_segments": [],
-  "contact_events": [],
+  "entity_tracks": [],
+  "motion_segments": [],
+  "state_transitions": [],
+  "interactions": [],
+  "geometry_cues": [],
   "keyframes": [],
-  "keypoints_2d": [],
-  "cross_view_matches": [],
+  "observations_2d": [],
+  "cross_video_matches": [],
   "occlusions": [],
   "appearance_notes": [],
   "candidate_assumptions": [],
@@ -837,49 +865,37 @@ result1/
 }
 ```
 
-结果1中的每个重要结论都应带：
+每个重要结论都应记录 `source_video`、`shot_id`、`frame_index` 或时间范围、`evidence_type`、`confidence`、`visibility` 和 `inference_level`。结果1可以保留多个候选相机、身份、深度、拓扑或运动解释，供 GPT6 在下一阶段统一裁决。
 
-- `source_view`
-- `frame_index` 或时间范围
-- `evidence_type`
-- `confidence`
-- `visibility`
-- `inference_level`：`observed`、`inferred` 或 `assumed`
+### 16.6 Prompt2：让 GPT6 把结果1编译为结果2
 
-结果1允许存在多个候选答案。例如相机可能有两个合理朝向、夹爪型号无法确定、货架可能被隔板遮挡。这些冲突正是下一阶段交给 GPT6 的内容。
-
-### 16.5 Prompt2：让 GPT6 把结果1编译为结果2
-
-Prompt2 不要求 GPT6 重复描述视频，而是要求它审计结果1并做少量高价值决策。
-
-推荐 Prompt2 模板：
+Prompt2 要求 GPT6 检查证据覆盖率和内部矛盾，并把开放式视频解释编译为可执行规格：
 
 ```text
-你是 ASTRA Real-to-Sim 的高级重建审计器。
+你是 ASTRA 视频到 Blender 重建的高级审计器和执行规格编译器。
 
 输入：结果1结构化观察包。
-目标：纠正结果1中的错误，解决跨视角冲突，选择一套内部一致、可执行、
-可验证的 Blender 重建方案，并输出自包含的结果2。
+目标：纠正观察错误，解决可裁决的时空、相机、实体、几何和运动冲突，选择一套
+内部一致、可执行、可验证的 Blender 重建方案，并输出自包含的结果2。
 
 必须完成：
-1. 审计帧数、时间轴、相机角色、物体身份和动作事件。
-2. 对每个候选假设作出 accept、reject 或 unresolved 裁决并说明证据。
-3. 固定源帧到 Blender 帧和视频帧的映射。
-4. 给出相机、尺度、场景布局、资产、动作、抓取、释放和落物策略。
-5. 把所有第三阶段需要的信息复制或重写进结果2，不能引用结果1的未附内容。
-6. 区分 frozen 字段与 tunable 字段。
-7. 为稀疏预览、碰撞、连续性、可见性和最终视频定义机器可检查的质量门。
-8. 将无法安全决定的问题放入 blockers；只要 blockers 非空，就禁止阶段3全量渲染。
-9. 记录每项裁决对应的原始视角和帧号，保留证据链。
+1. 审计源文件、帧数、时间轴、镜头、相机运动、实体身份、运动段、形变和状态变化。
+2. 对候选假设作出 accept、reject 或 unresolved 裁决，并记录证据和置信度。
+3. 定义每个源视频帧到 Blender 帧及对应输出帧的映射；异步视频分别定义映射。
+4. 选择坐标系、尺度约定、场景布局、相机重建、资产来源、材质、灯光和遮挡策略。
+5. 按实体类型选择刚体动画、骨骼绑定、形状键、布料/软体、粒子或其他实现。
+6. 给出相机动画、实体动画、约束、交互和状态切换的逐帧或可插值规格。
+7. 把阶段3需要的全部信息写进结果2，不引用结果1中未附带的内容。
+8. 区分 frozen_fields 与 tunable_fields，并定义稀疏预览和全量渲染质量门。
+9. 将无法安全决定且会阻止执行的问题写入 blockers；blockers 非空时禁止全量渲染。
+10. 为每项裁决保留源视频、镜头和帧号证据链。
 
-结果2必须可以在不重新提供结果1的情况下被中低代码模型执行。
+结果2必须能在不重新提供结果1的情况下由中低代码模型执行。
 ```
 
-### 16.6 结果2：自包含、已裁决的执行规格
+### 16.7 结果2：自包含、已裁决的执行规格
 
-结果2是整个三级方案的关键。它既不是结果1的摘要，也不是一般性建议，而是可直接驱动阶段3的编译产物。
-
-推荐结构：
+结果2不是结果1的简短摘要，而是阶段3可以直接读取的编译产物：
 
 ```text
 result2/
@@ -888,48 +904,56 @@ result2/
 ├── asset_manifest.json
 ├── observation_tables/
 │   ├── cameras.json
-│   ├── keypoints.json
-│   ├── events.json
-│   └── motion_constraints.json
+│   ├── entities.json
+│   ├── motion.json
+│   └── constraints.json
 └── evidence_index.csv
 ```
 
-`execution_spec.json` 至少应包含：
+`execution_spec.json` 的最小通用结构如下：
 
 ```json
 {
-  "schema_version": "astra.result2.v1",
+  "schema_version": "astra.result2.v2",
   "status": "ready",
   "input_contract": {
-    "root": "real_rgb",
-    "views": ["head", "hand_left", "hand_right"],
-    "frame_range": [0, 592],
-    "fps": 30,
-    "timing_source": "assumed",
+    "videos": [],
+    "source_frame_ranges": {},
+    "timeline": {
+      "fps": null,
+      "frame_count": null,
+      "mapping_policy": "explicit per-source-frame mapping"
+    },
     "input_hashes": {}
   },
   "frame_mapping": {
-    "source_to_blender_offset": 1,
-    "source_to_video_offset": 0
+    "source_to_blender": {},
+    "source_to_output": {}
   },
   "resolved_scene": {
-    "objects": [],
+    "coordinate_system": {},
+    "scale_policy": "documented relative scale unless metric evidence exists",
+    "environment": [],
     "spatial_relations": [],
     "materials": [],
+    "lighting": [],
     "hidden_geometry_policy": "minimal editable approximation"
   },
-  "resolved_cameras": {},
-  "resolved_action": {
+  "resolved_cameras": [],
+  "resolved_entities": [],
+  "resolved_motion": {
     "segments": [],
-    "grasp_frame": null,
-    "release_frame": null,
-    "settle_frame": null,
-    "attachment_rule": "rigid_relative_transform"
+    "state_transitions": [],
+    "interactions": [],
+    "constraints": []
   },
+  "rigging_and_simulation_strategies": [],
   "asset_decisions": [],
   "blender_build_spec": {},
   "preview_spec": {},
-  "render_spec": {},
+  "render_spec": {
+    "output_views": []
+  },
   "output_contract": {},
   "quality_gates": [],
   "frozen_fields": [],
@@ -940,22 +964,11 @@ result2/
 }
 ```
 
-结果2必须满足：
+结果2必须同时满足：自包含、无悬空引用、机器可执行、机器可验证、证据可追溯、状态明确。只有 `status=ready` 且 `blockers=[]` 时才能进入 Prompt3。无法用纯文本充分表达的证据可以随结果2附带关键帧裁剪、掩码、关键点或轨迹文件；它们属于结果2包本身。
 
-1. **自包含**：第三阶段不需要结果1即可理解所有参数和约束。
-2. **无悬空引用**：不能出现“见结果1第X项”之类的依赖。
-3. **可执行**：每个场景对象、动作事件和输出都有机器可读规格。
-4. **可验证**：每项关键要求都有对应质量门。
-5. **可追溯**：决策仍保留原始视角和帧号，但不要求重新上传结果1。
-6. **状态明确**：`status=ready` 且 `blockers=[]` 时才允许执行 Prompt3。
+### 16.8 Prompt3：用中低模型执行结果2
 
-如果完整证据无法用纯文本表达，结果2可以是一个包含 JSON、CSV 和少量关键帧裁剪的压缩包。第三阶段仍然只接收“结果2包”，不单独接收结果1。
-
-### 16.7 Prompt3：让中低模型从结果2生成最终结果3
-
-Prompt3 的目标是忠实执行，不再做开放式视觉推理。
-
-推荐 Prompt3 模板：
+Prompt3 只负责忠实实现已经裁决的方案：
 
 ```text
 你是 ASTRA Blender 执行代理。
@@ -964,90 +977,71 @@ Prompt3 的目标是忠实执行，不再做开放式视觉推理。
 目标：严格按照结果2构建、验证并交付结果3。
 
 执行规则：
-1. 首先验证结果2 schema、status、blockers、输入文件路径和哈希。
+1. 验证结果2 schema、status、blockers、源文件路径、哈希和时间映射。
 2. 不重新解释任务语义，不修改 frozen_fields。
-3. 将所有确定性工作实现为可重复运行的 Python、Blender Python 或 shell 脚本。
-4. 先生成场景并只渲染 preview_spec 中的关键帧。
-5. 运行相机、动作、碰撞、连续性和目标可见性质量门。
-6. 任何必过质量门失败时停止，输出 failure_report.json，不自行降低标准。
-7. 质量门全部通过后，再并行渲染三个视角的完整 sim_rgb。
-8. 按结果2的 frame_mapping 编码 real_rgb、sim_rgb 和对比视频。
-9. 使用 FFprobe 和完整解码复核帧数、fps、分辨率、时长和 PTS。
-10. 输出结果3清单、运行日志、验证报告和已知限制。
+3. 将确定性工作实现为可重复运行的 Python、Blender Python 或 shell 脚本。
+4. 建立场景、相机、资产、绑定、动画、形变、状态切换、材质和灯光。
+5. 先渲染 preview_spec 指定的帧和输出相机，并执行全部预览质量门。
+6. 必过质量门失败时停止，输出 failure_report.json，不自行降低标准。
+7. 预览通过后，渲染 render_spec.output_views 要求的全部帧；视角数量不得硬编码。
+8. 按 frame_mapping 生成源视频、重建视频和逐帧对比材料。
+9. 使用 FFprobe 和完整解码验证帧数、时间戳、分辨率、时长和帧映射。
+10. 输出可编辑 Blender 工程、可重跑脚本、运行日志、验证报告和已知限制。
 
-若结果2的信息不足，返回结构化 blocker，不从常识补造相机、尺度或轨迹。
+若结果2信息不足，返回结构化 blocker，不从常识补造相机、尺度、几何或运动。
 ```
 
-### 16.8 结果3：最终交付包
+### 16.9 结果3：通用最终交付包
 
-推荐结果3包含：
+推荐结果3采用与主体和视角名称无关的目录：
 
 ```text
 result3/
 ├── reconstruction/
-│   ├── replay.blend
+│   ├── scene.blend
 │   ├── camera_estimates.json
-│   ├── motion.json
+│   ├── animation.json
 │   └── asset_manifest.json
 ├── scripts/
 │   ├── build_scene.py
 │   ├── render_sequence.py
 │   ├── validate_scene.py
 │   └── package_videos.py
-├── sim_rgb/
-│   ├── head/
-│   ├── hand_left/
-│   └── hand_right/
+├── renders/
+│   └── <output_view>/
 ├── videos/
-│   ├── real_rgb/
-│   ├── sim_rgb/
-│   ├── real_rgb.mp4
-│   ├── sim_rgb.mp4
-│   └── real_sim_three_views.mp4
-├── reports/
+│   ├── source/
+│   └── reconstruction/
+├── comparison/
 │   ├── frame_correspondence.csv
+│   └── synchronized_comparison.mp4
+├── reports/
 │   ├── reconstruction_validation.json
-│   ├── environment_validation.json
+│   ├── geometry_and_motion_validation.json
 │   ├── video_validation.json
 │   └── failure_report.json
 └── README.md
 ```
 
-`failure_report.json` 只在失败时存在。最终成功条件为：
+`failure_report.json` 只在失败时存在。成功交付要求：结果2没有 blocker；所有必过质量门通过；要求的每个输出视角和帧均已生成；Blender 工程可编辑且可由脚本重建；视频可完整解码；每个输出帧都能追溯到对应源帧和 Blender 帧。具体项目可以给 `source` 与 `reconstruction` 配置领域别名，但通用 schema 不依赖这些别名。
 
-- 结果2中的 `blockers` 为空。
-- 所有必过质量门通过。
-- 三个 `sim_rgb` 视角的帧数与真实视频一致。
-- Blender 场景可编辑并可由脚本重建。
-- 所有最终视频完整解码。
-- 每个视频帧都能追溯到同编号源帧和 Blender 帧。
+### 16.10 网页端使用方式
 
-### 16.9 网页端使用方式
+三级方案可以通过网页模型和本地执行环境协作完成：
 
-三级方案可以在网页端完成模型交互：
+1. 向中低多模态模型上传一个或多个原始视频和 Prompt1，下载结果1。
+2. 向 GPT6 上传结果1和 Prompt2，下载自包含结果2。
+3. 向中低代码模型上传结果2和 Prompt3，得到脚本包、执行说明或工程文件。
+4. 在具备 Blender、FFmpeg 和所需 CPU/GPU 的环境运行阶段3脚本；若网页模型能直接调用这些工具，也可由其执行。
 
-1. 在中低多模态模型网页中上传三路视频和 Prompt1，下载结果1。
-2. 在 GPT6 网页中上传结果1和 Prompt2，下载自包含结果2。
-3. 在中低代码模型网页中上传结果2和 Prompt3，获得脚本包、执行说明或可下载工程。
-4. Blender 全量渲染仍需有 GPU/CPU、Blender 和 FFmpeg 的执行环境。若网页端没有这些工具，阶段3模型负责生成完整代码包，本地或渲染服务器负责运行。
+Prompt、schema 和工具链都应版本化；原始视频、结果1和结果2都应记录 SHA-256；每个阶段只依赖明确上传或在输入包中引用并校验的文件，不能依赖未导出的聊天历史。
 
-为避免不同网页会话丢失上下文：
+### 16.11 缓存、复用与成本控制
 
-- Prompt1、Prompt2、Prompt3 都应版本化。
-- 结果1、结果2必须包含 `schema_version`。
-- 原始视频、结果1和结果2都应记录 SHA-256。
-- 不依赖聊天历史中未导出的内容。
-- 每个阶段只读取明确上传的输入包。
-
-### 16.10 缓存和复用策略
-
-这套方案的效率来自阶段结果可以缓存：
-
-- 原始视频不变时，结果1可以复用。
-- 只修改渲染质量、材质细节或输出布局时，可以直接重用结果2，从阶段3开始。
-- 只修改 Prompt3 的实现方式时，不需要再次调用 GPT6。
-- 只有任务解释、相机方案、隐藏结构、动作事件或质量标准变化时才重新运行阶段2。
-- 结果3失败且原因明确时由脚本或中低模型修复；原因涉及全局假设时才回到 GPT6。
+- 原始视频不变时，可以复用结果1。
+- 只改变重建假设或验收标准时，从阶段2重新运行。
+- 只改变脚本实现、渲染质量或输出布局时，可以复用结果2，从阶段3开始。
+- 阶段3的确定性故障由脚本或中低模型处理；只有失败指向场景解释、身份、相机、隐藏结构或运动歧义时才回到 GPT6。
 
 建议缓存键：
 
@@ -1057,41 +1051,40 @@ result2_cache_key = SHA256(result1_hash + prompt2_version + result2_schema_versi
 result3_cache_key = SHA256(result2_hash + prompt3_version + toolchain_versions)
 ```
 
-### 16.11 异常回路
+### 16.12 异常回路
 
-正常流程只调用 GPT6 一次。阶段3失败时按以下规则处理：
+正常流程只调用 GPT6 一次。阶段3失败时按以下规则路由：
 
 | 失败类型 | 处理者 | 是否重新调用 GPT6 |
 |---|---|---|
-| 文件缺失、路径、依赖、编码错误 | [S][M] | 否 |
-| Blender API 或脚本语法错误 | [M][S] | 否 |
-| GPU 内存不足、超时 | [S][M] | 否 |
-| 碰撞且修复方向唯一 | [S][M] | 否 |
-| 物体类别、相机角色或抓放事件判断错误 | [G] | 是 |
-| 多视角几何互相矛盾 | [G] | 是 |
-| 修复一种视角会破坏另一视角 | [G] | 是 |
+| 文件缺失、路径、依赖、编码或 Blender API 错误 | [S][M] | 否 |
+| GPU 内存不足、超时或渲染任务调度失败 | [S][M] | 否 |
+| 数值越界且修复范围已在 `tunable_fields` 中定义 | [S][M] | 否 |
+| 实体身份、镜头关系或状态变化的判断错误 | [G] | 是 |
+| 多视频几何、时间或身份约束互相矛盾 | [G] | 是 |
+| 改善一个要求会破坏另一个冻结要求 | [G] | 是 |
 | 用户改变任务成功条件 | [G] | 是 |
 
-需要重新调用 GPT6 时，输入应为：
+需要 GPT6 修订时输入：
 
 ```text
 当前结果2 + failure_report.json + Prompt2-Repair
 ```
 
-GPT6 输出 `result2_revision_N`。之后第三阶段仍然只接收：
+GPT6 输出 `result2_revision_N`，第三阶段随后只接收：
 
 ```text
 result2_revision_N + Prompt3
 ```
 
-不会重新把结果1传给第三阶段。
+结果1仍不回传给第三阶段。
 
-### 16.12 三级方案与细粒度方案的关系
+### 16.13 三级方案与细粒度实现的关系
 
-三级方案没有取消视觉模型和确定性脚本，而是把它们封装到三个清晰阶段：
+三级级联是模型之间的通用接口，前文机器人案例中的脚本和质量门则是阶段3的一种具体实现：
 
-- 阶段1内部：中低多模态模型可以调用抽帧、检测、光流和视频元数据脚本。
-- 阶段2内部：GPT6只做全局审计和方案编译。
-- 阶段3内部：中低代码模型调用 Blender、数值优化、渲染、碰撞和编码脚本。
+- 阶段1内部可调用视频解码、抽帧、检测、分割、跟踪、光流、SfM/SLAM 和元数据脚本。
+- 阶段2由 GPT6处理会改变全局方案的歧义，并把结果编译成自包含规格。
+- 阶段3调用 Blender、几何优化、绑定、动画、仿真、渲染、编码和验证工具。
 
-对于单条任务、网页端协作或批量离线处理，三级接口更容易复制和交接；对于持续开发的工程，前文的细粒度质量门更适合定位故障。推荐以三级级联作为外部接口，以细粒度脚本流水线作为阶段3内部实现。
+单条短视频可以先运行直接 GPT6 基线建立质量上限。批量任务、长视频、多轮修改或网页端交接更适合三级级联。两条路线使用同一验收协议，才能判断级联节省的成本是否以可接受的重建误差为代价。

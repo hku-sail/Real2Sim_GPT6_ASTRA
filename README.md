@@ -2,7 +2,7 @@
 
 **中文** | [English](README_EN.md)
 
-[详细执行记录与 Efficient ASTRA 3D 重建流水线](docs/efficient_astra_3d_pipeline_zh-CN.md)
+[机器人案例复盘与通用视频到 Blender Efficient ASTRA 流水线](docs/efficient_astra_3d_pipeline_zh-CN.md)
 
 ## 仓库内容与数据准备
 

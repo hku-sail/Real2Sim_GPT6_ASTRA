@@ -2,7 +2,7 @@
 
 [中文](README.md) | **English**
 
-[Detailed work log and Efficient ASTRA 3D reconstruction pipeline (Chinese)](docs/efficient_astra_3d_pipeline_zh-CN.md)
+[Robot case study and general video-to-Blender Efficient ASTRA pipeline (Chinese)](docs/efficient_astra_3d_pipeline_zh-CN.md)
 
 ## Repository Contents and Data Preparation
 
